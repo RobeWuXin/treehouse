@@ -1,5 +1,95 @@
 # Changelog
 
+## [4.0.0](https://github.com/RobeWuXin/treehouse/compare/v3.1.8...v4.0.0) (2026-11-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* **cmd:** `treehouse return` now exits 3, not 0, when it leaves a dirty worktree in place, and `treehouse get` does the same when its subshell exits leaving one dirty. Callers that read exit 0 as "the slot was released" were reading the bug this fixes; scripts under `set -e`, or using `treehouse return "$p" && next-step`, will now stop or branch differently at a dirty abort. Pass --force to clean and return, or treat exit 3 as "not returned".
+* **cmd:** the `treehouse destroy --force` flag is removed. Replace it with the specific --include-unlanded / --include-in-use / --include-leased flag(s) for the risk you intend to override, plus --yes, and pass an explicit pool path to --all.
+
+### Features
+
+* add --root flag and TREEHOUSE_ROOT env for the worktree root ([#93](https://github.com/RobeWuXin/treehouse/issues/93)) ([e443e55](https://github.com/RobeWuXin/treehouse/commit/e443e55435e67ebc2a65eba22076b543531d4215))
+* add Nix package manager install support ([#113](https://github.com/RobeWuXin/treehouse/issues/113)) ([09ccbfc](https://github.com/RobeWuXin/treehouse/commit/09ccbfce82c64d684240fd80a4a05d1f67f1ffb8))
+* add no-fetch worktree acquisition ([d8a76d7](https://github.com/RobeWuXin/treehouse/commit/d8a76d74c8112420ca3422e01cb10ad870a2c93f))
+* add opt-in branch creation to treehouse get ([#150](https://github.com/RobeWuXin/treehouse/issues/150)) ([6823716](https://github.com/RobeWuXin/treehouse/commit/68237161bc99b080886c4ebf007ef28cc82c10fc))
+* add per-acquisition file seeding manifests ([#131](https://github.com/RobeWuXin/treehouse/issues/131)) ([b511387](https://github.com/RobeWuXin/treehouse/commit/b5113878ceb7e1e461249cecfd0847a38f93b040))
+* **cmd:** add global prune mode ([#26](https://github.com/RobeWuXin/treehouse/issues/26)) ([ca17bea](https://github.com/RobeWuXin/treehouse/commit/ca17beaa1082cc13dab29b1564e154b760757e4a))
+* **cmd:** make destroy safe by default ([#37](https://github.com/RobeWuXin/treehouse/issues/37)) ([624e369](https://github.com/RobeWuXin/treehouse/commit/624e36976824d983edaa284de7310ffa5c167f9e))
+* **cmd:** report checked-out branches in status ([#134](https://github.com/RobeWuXin/treehouse/issues/134)) ([10924c4](https://github.com/RobeWuXin/treehouse/commit/10924c4eb76579f6e79146c18ef38ca75f72df54))
+* **cmd:** return a worktree by name and add return --all ([#143](https://github.com/RobeWuXin/treehouse/issues/143)) ([70d23fd](https://github.com/RobeWuXin/treehouse/commit/70d23fd8d616232e1a9d4187400d9741a6e9946b))
+* **config:** add configurable root for pool directory ([#12](https://github.com/RobeWuXin/treehouse/issues/12)) ([5ca17d2](https://github.com/RobeWuXin/treehouse/commit/5ca17d2e03fcaa82c790a7a66e1db49d185b28e7))
+* **fileclone:** add opt-in APFS sharing for fresh Git worktrees ([#153](https://github.com/RobeWuXin/treehouse/issues/153)) ([493fbcd](https://github.com/RobeWuXin/treehouse/commit/493fbcd56024bb31914cc178405b8127d4d0c3e4))
+* initial project setup ([8e27a62](https://github.com/RobeWuXin/treehouse/commit/8e27a625110c8e2925652945ce88444de1a3eed3))
+* **nix:** add flake.nix and flake.lock ([#15](https://github.com/RobeWuXin/treehouse/issues/15)) ([9dd8cd0](https://github.com/RobeWuXin/treehouse/commit/9dd8cd0906a88db3b2b664435c0aa036c6250c61))
+* **pool:** add durable worktree leases ([#35](https://github.com/RobeWuXin/treehouse/issues/35)) ([4a0d370](https://github.com/RobeWuXin/treehouse/commit/4a0d37026678017489a7ee8391c68f9ea02fddb8))
+* **pool:** add lease command to durably lease an existing worktree ([#128](https://github.com/RobeWuXin/treehouse/issues/128)) ([2bfebe2](https://github.com/RobeWuXin/treehouse/commit/2bfebe2ead456a6334139742b09305961f80ba44))
+* **pool:** add return --if-clean ([#217](https://github.com/RobeWuXin/treehouse/issues/217)) ([5b5baef](https://github.com/RobeWuXin/treehouse/commit/5b5baef4627b2bd5630945157edaa856df98f9e7))
+* **pool:** add stable lease identities ([#68](https://github.com/RobeWuXin/treehouse/issues/68)) ([7872d28](https://github.com/RobeWuXin/treehouse/commit/7872d2854068426cebfbb55d86ced89801df775c))
+* **pool:** add user lifecycle hooks ([#22](https://github.com/RobeWuXin/treehouse/issues/22)) ([d3b3f6b](https://github.com/RobeWuXin/treehouse/commit/d3b3f6b02ceb14006495a7df604458a69f7c4016))
+* **pool:** automatically free safe recovered slots ([#159](https://github.com/RobeWuXin/treehouse/issues/159)) ([fb7a26f](https://github.com/RobeWuXin/treehouse/commit/fb7a26f535fa924716af23b6f5a403bee2d862f1))
+* **pool:** classify orphaned worktrees during prune ([#28](https://github.com/RobeWuXin/treehouse/issues/28)) ([b94c125](https://github.com/RobeWuXin/treehouse/commit/b94c125df8300b6c141c1997405856291fff5fad))
+* **pool:** make where a new pool worktree is placed configurable ([#140](https://github.com/RobeWuXin/treehouse/issues/140)) ([d597c67](https://github.com/RobeWuXin/treehouse/commit/d597c676f4004ea39929f5737401e2e087ae089a))
+* **pool:** opt-in unique worktree directory names for get ([#126](https://github.com/RobeWuXin/treehouse/issues/126)) ([017e86b](https://github.com/RobeWuXin/treehouse/commit/017e86b2f6005bb73cf4c8d69c8d57e376c97c3c))
+* **pool:** seed ignored files from .worktreeinclude ([#129](https://github.com/RobeWuXin/treehouse/issues/129)) ([8d26b2d](https://github.com/RobeWuXin/treehouse/commit/8d26b2d5abba4759afc21626d0bdae8be12323e9))
+* **pool:** support configurable base branch for get ([#119](https://github.com/RobeWuXin/treehouse/issues/119)) ([da3202c](https://github.com/RobeWuXin/treehouse/commit/da3202c5eaa0f7e51376a8948809fa697628e60f))
+* **prune:** add safe stale worktree pruning ([#24](https://github.com/RobeWuXin/treehouse/issues/24)) ([933b468](https://github.com/RobeWuXin/treehouse/commit/933b468aea5b65011fde0db3ff9f1cb554a103a1))
+* **status:** show current worktree status ([596b1dd](https://github.com/RobeWuXin/treehouse/commit/596b1ddc168acae27f4ce6e1b838948aea0d605c))
+* use latest default branch for worktree ([d5df797](https://github.com/RobeWuXin/treehouse/commit/d5df797ba985071eabdcf3ee021ec3c7b13f1b99))
+* **vcs:** add opt-in Jujutsu (jj) workspace backend behind a VCS seam ([#100](https://github.com/RobeWuXin/treehouse/issues/100)) ([358e450](https://github.com/RobeWuXin/treehouse/commit/358e4505e120ad7103cd7d7b7eeb66dd031f5606))
+* **vcs:** slot-flavor dispatch, flavor-aware acquire, and markerless fail-closed hardening ([#110](https://github.com/RobeWuXin/treehouse/issues/110)) ([7b52809](https://github.com/RobeWuXin/treehouse/commit/7b5280909845c2d7155c9e7b0451aa02d9c7bdcc))
+
+
+### Bug Fixes
+
+* add /v3 major version suffix to module path ([#167](https://github.com/RobeWuXin/treehouse/issues/167)) ([df0cfd9](https://github.com/RobeWuXin/treehouse/commit/df0cfd99588f8d5a83523891708dac39fa4f7031))
+* app update permission error ([5b45b23](https://github.com/RobeWuXin/treehouse/commit/5b45b238dfc0656ca5637c07f82ae63a5487cf9d))
+* CI failures ([262fbe3](https://github.com/RobeWuXin/treehouse/commit/262fbe3bcb37b8df66cdc592aaa9f4a483384590))
+* **ci:** make update-vendor-hash fork-aware for checkout and push ([#105](https://github.com/RobeWuXin/treehouse/issues/105)) ([aca0a98](https://github.com/RobeWuXin/treehouse/commit/aca0a9820843a70e64ed32998bb9d78bcc0df211))
+* **ci:** suppress pull_request runs on release-please PRs ([#77](https://github.com/RobeWuXin/treehouse/issues/77)) ([4d6b5b1](https://github.com/RobeWuXin/treehouse/commit/4d6b5b1aa8559b03a9a6bd49628a32ff81a46ae4))
+* **cli:** expose version flag and set rootCmd.Version ([54919c3](https://github.com/RobeWuXin/treehouse/commit/54919c394c0b7cefc008020a93a72ec12db1dbb9))
+* **cmd:** detach worktrees before pool reuse ([#19](https://github.com/RobeWuXin/treehouse/issues/19)) ([fb3bae0](https://github.com/RobeWuXin/treehouse/commit/fb3bae09b5bccbf7b684ed1b09d4034d5cc4028d))
+* **cmd:** exit non-zero when a dirty worktree is not returned ([#138](https://github.com/RobeWuXin/treehouse/issues/138)) ([a13d5d1](https://github.com/RobeWuXin/treehouse/commit/a13d5d1d2219c691bf22b928fd08c69445ab5d7a))
+* **cmd:** paste-safe dirty non-TTY return --force hints ([#122](https://github.com/RobeWuXin/treehouse/issues/122)) ([1b47563](https://github.com/RobeWuXin/treehouse/commit/1b475639f0458b5cb46e8204596aead8b5dba130))
+* **cmd:** resolve main repo root for pool commands run inside a worktree ([#51](https://github.com/RobeWuXin/treehouse/issues/51)) ([e48b27e](https://github.com/RobeWuXin/treehouse/commit/e48b27e7be5d3732f95d57ee6c1009dcc0423c4c))
+* **config:** warn when repository hooks are ignored ([#141](https://github.com/RobeWuXin/treehouse/issues/141)) ([3496e2e](https://github.com/RobeWuXin/treehouse/commit/3496e2e669cd07a5903c809015e013ac86e49dee))
+* detect squash-merged worktrees ([#88](https://github.com/RobeWuXin/treehouse/issues/88)) ([232700b](https://github.com/RobeWuXin/treehouse/commit/232700b41149ea69839cfe06747088fb9e86d1c3))
+* **get:** skip reclaiming a pool slot that holds unlanded work ([#104](https://github.com/RobeWuXin/treehouse/issues/104)) ([c108f5f](https://github.com/RobeWuXin/treehouse/commit/c108f5fbe81c9f17069b8d657259c7e858f0f846))
+* ignore in-project pool via .git/info/exclude ([da83c79](https://github.com/RobeWuXin/treehouse/commit/da83c7936991bcd46f9e5444b21161ac8a629b6e))
+* install under ~/.local/bin when in PATH ([8ed1058](https://github.com/RobeWuXin/treehouse/commit/8ed1058612650a657aacf7e03a378fc6e52ff372))
+* **installer:** resolve latest release without GitHub API ([#197](https://github.com/RobeWuXin/treehouse/issues/197)) ([ea5776c](https://github.com/RobeWuXin/treehouse/commit/ea5776cfdaf5b7cf15853f6c368c8b9d5620841a))
+* **nix:** drop x86_64-darwin and update flake.lock ([#182](https://github.com/RobeWuXin/treehouse/issues/182)) ([6eac258](https://github.com/RobeWuXin/treehouse/commit/6eac258b400119dee1cf1a176341d19c838ce974))
+* pin nix-build to flake-locked nixpkgs and extract package.nix ([#135](https://github.com/RobeWuXin/treehouse/issues/135)) ([0c9eed8](https://github.com/RobeWuXin/treehouse/commit/0c9eed8257ab22c5c153bf157b0fd7d9763ca876))
+* **pool:** adopt pre-3.0 state instead of quarantining it as recovered ([#156](https://github.com/RobeWuXin/treehouse/issues/156)) ([d8478b9](https://github.com/RobeWuXin/treehouse/commit/d8478b909e193a4a7a41ad88b29291e9207001c1))
+* **pool:** guard against invalid worktree registrations ([#200](https://github.com/RobeWuXin/treehouse/issues/200)) ([c751cff](https://github.com/RobeWuXin/treehouse/commit/c751cffb08411f312a3f623c63f8603fcfb19b22))
+* **pool:** let prune and destroy reclaim worktrees from other clones in a shared pool ([#146](https://github.com/RobeWuXin/treehouse/issues/146)) ([fe0fd7c](https://github.com/RobeWuXin/treehouse/commit/fe0fd7cc97224d378918c5dd7e22874bd6780206))
+* **pool:** make state persistence atomic and recoverable ([#55](https://github.com/RobeWuXin/treehouse/issues/55)) ([fb7651d](https://github.com/RobeWuXin/treehouse/commit/fb7651d246fe6e301d855f57bbaa66d05a64c6e4))
+* **pool:** merge state entries that record one worktree under two paths ([#215](https://github.com/RobeWuXin/treehouse/issues/215)) ([55282e1](https://github.com/RobeWuXin/treehouse/commit/55282e1e3735b0602c8fbbc9fbcb5c22334409bf))
+* **pool:** preserve worktree identity across symlinked pool paths ([#208](https://github.com/RobeWuXin/treehouse/issues/208)) ([aed94fb](https://github.com/RobeWuXin/treehouse/commit/aed94fb43419eb1348d91d0d3c521639c48bae49))
+* **pool:** prune stale worktree registrations before adding in get ([6d60a7f](https://github.com/RobeWuXin/treehouse/commit/6d60a7fb02ef11909ca436753ac1bda7e21c4d1c)), closes [#31](https://github.com/RobeWuXin/treehouse/issues/31)
+* **pool:** reclaim empty leftover slot directories on get ([#186](https://github.com/RobeWuXin/treehouse/issues/186)) ([d6133bd](https://github.com/RobeWuXin/treehouse/commit/d6133bdd673cbfba2e182ce7a65a776cf20d2903))
+* **pool:** report only the processes return would terminate in status ([#139](https://github.com/RobeWuXin/treehouse/issues/139)) ([285ddb1](https://github.com/RobeWuXin/treehouse/commit/285ddb10a02d38ee6d3064a8ba5cf21185cca2c5))
+* **pool:** reuse a pooled worktree only for the clone that owns it ([#145](https://github.com/RobeWuXin/treehouse/issues/145)) ([8bebb58](https://github.com/RobeWuXin/treehouse/commit/8bebb58e1f3d97abcc0e919337622a2bec7c1407))
+* **pool:** stop get from deregistering live slots it cannot see ([#198](https://github.com/RobeWuXin/treehouse/issues/198)) ([2327c1b](https://github.com/RobeWuXin/treehouse/commit/2327c1b2fb3a17ca683e33bbf300970b35a7448e)), closes [#194](https://github.com/RobeWuXin/treehouse/issues/194)
+* **process:** safely clean up lingering worktree processes ([#17](https://github.com/RobeWuXin/treehouse/issues/17)) ([df64579](https://github.com/RobeWuXin/treehouse/commit/df64579775e8ea7e578aa7b9f2eed5b062652e72))
+* **process:** wait for SIGKILLed processes to be reaped before return runs git ([#102](https://github.com/RobeWuXin/treehouse/issues/102)) ([40d6c89](https://github.com/RobeWuXin/treehouse/commit/40d6c8965b872753f3fc530fecb58029637802f3))
+* recheck app update when cached version is stale ([9a919b7](https://github.com/RobeWuXin/treehouse/commit/9a919b76398916c13b09db6c0f2c43e2e9bfdddb))
+* **return:** refuse to reset a worktree that still has live writers ([#103](https://github.com/RobeWuXin/treehouse/issues/103)) ([fe6ad98](https://github.com/RobeWuXin/treehouse/commit/fe6ad981334fd3c30d5dad25936d9d542b9f4ce9))
+* **shell:** start supported user shells as interactive login sessions ([#120](https://github.com/RobeWuXin/treehouse/issues/120)) ([c952a1c](https://github.com/RobeWuXin/treehouse/commit/c952a1cc527f8377b503136b426c9211331bb65f))
+* shorter version display ([ff8702f](https://github.com/RobeWuXin/treehouse/commit/ff8702f180dc6fa65db8cb6662911c84e1abb4da))
+* update repository URLs ([2da12cc](https://github.com/RobeWuXin/treehouse/commit/2da12ccac294980d676dff57e6835caeee6448b4))
+* update vendor hash handling in workflow ([2ab127a](https://github.com/RobeWuXin/treehouse/commit/2ab127a601065b145d918efd5a1da1c6f020e21f))
+* **update:** refuse self-update and silence the notice in the Nix store ([#180](https://github.com/RobeWuXin/treehouse/issues/180)) ([875bb77](https://github.com/RobeWuXin/treehouse/commit/875bb775df23db3bad63abb64e78a402f2dc3d01))
+* **updater:** keep update-check cache fresh when install is up to date ([#213](https://github.com/RobeWuXin/treehouse/issues/213)) ([0291f2e](https://github.com/RobeWuXin/treehouse/commit/0291f2e2a5766fdefa41f16ab861305eddd585ff))
+* **updater:** replace a running Windows exe without a fixed .old backup ([#121](https://github.com/RobeWuXin/treehouse/issues/121)) ([f4cb2b0](https://github.com/RobeWuXin/treehouse/commit/f4cb2b0e39b65018dae26c71c9708750c66192c1))
+* use remote URL for pool hash for local repos ([f199982](https://github.com/RobeWuXin/treehouse/commit/f199982ff07d5e692bc6e45fdc279b87637553f0))
+* **vcs:** check recovered HEAD containment with a single rev-list walk ([#164](https://github.com/RobeWuXin/treehouse/issues/164)) ([ff42861](https://github.com/RobeWuXin/treehouse/commit/ff428613316dea2deb2367f429dcb5db8a22e46b))
+* **vcs:** move HEAD through a git transaction on reftable repositories ([#175](https://github.com/RobeWuXin/treehouse/issues/175)) ([d6e9804](https://github.com/RobeWuXin/treehouse/commit/d6e9804977af918e64877fe21b5e92ccad0a21d3)), closes [#174](https://github.com/RobeWuXin/treehouse/issues/174)
+* **vcs:** pin submodule.recurse=false in git runners ([#177](https://github.com/RobeWuXin/treehouse/issues/177)) ([df72414](https://github.com/RobeWuXin/treehouse/commit/df72414ec0aeccf84366126720624c3aced11ae0))
+* **vcs:** recover stale HEAD.lock left by interrupted worktree reset ([#178](https://github.com/RobeWuXin/treehouse/issues/178)) ([ea6d6b8](https://github.com/RobeWuXin/treehouse/commit/ea6d6b8af9341829696fe1098c2a0dc8ef956524))
+* windows test failure ([7d15a73](https://github.com/RobeWuXin/treehouse/commit/7d15a7375ffd8eef923f7757088fd9c6f8f6f972))
+
 ## [3.1.8](https://github.com/kunchenguid/treehouse/compare/v3.1.7...v3.1.8) (2026-10-30)
 
 
